@@ -1,5 +1,6 @@
 $(function() {
   var pages = $('.pt-page'),
+    main = $('#pt-main'),
     control = $('.pt-control'),
     next = $('.pt-next'),
     prev = $('.pt-prev'),
@@ -10,12 +11,15 @@ $(function() {
       controlBtn = $('<a href="#">' + index + '</a>').appendTo(control);
   });
 
+  // Default to first page
   $('a', control).eq(0).addClass('active');
+  main.addClass('pt-first-page');
 
   var moveToPage = function(index) {
     var lastPage = $(pages[currentPTIndex]),
       showAnim = 'pt-page-rotateRoomTopIn',
-      hideAnim = 'pt-page-rotateRoomTopOut';
+      hideAnim = 'pt-page-rotateRoomTopOut',
+      mainClass;
 
     // Check for animation name
     if (index < currentPTIndex) {
@@ -26,6 +30,15 @@ $(function() {
     // Set var
     currentPTIndex = index;
     animating = true;
+
+    // Add class to main
+    main.removeClass('pt-last-page pt-first-page');
+    if (currentPTIndex == 0) {
+      mainClass = 'pt-first-page';
+    } else if (currentPTIndex == pages.length - 1){
+      mainClass = 'pt-last-page';
+    }
+    main.addClass(mainClass);
 
     // Animation
     lastPage.addClass(hideAnim);
@@ -73,7 +86,7 @@ $(function() {
   });
 
   // Mouse
-  $('#pt-main').on('mousewheel', function(event) {
+  main.on('mousewheel', function(event) {
     if (event.deltaY > 0) {
     	prev.click();
     } else {
